@@ -43,7 +43,7 @@ Cada unidad es modular y se puede trabajar por separado. Para descargar únicame
 
 La pregunta de fondo que articula todo el laboratorio:
 
-> **¿Cómo pasa una señal lumínica capturada por un sensor a ser una matriz computable, qué transformaciones matemáticas y espaciales la modifican, y qué decisiones nos permiten extraer características y significado de una imagen digital?**
+> **¿Cómo pasa una señal lumínica capturada por un sensor a ser una matriz computable, qué transformaciones matemáticas y espaciales la modifican, y de qué forma las redes neuronales, la visión por computadora y la IA Generativa (GenAI) nos permiten interpretar y sintetizar nuevas imágenes digitales?**
 
 ```
  ● armado      ○ en desarrollo
@@ -65,11 +65,25 @@ La pregunta de fondo que articula todo el laboratorio:
      ↓
      ○ Nivel 3 — Detección, descriptores, video y DNN ....... 003_opencv/003_avanzado
 
- TRAMO D · COMPLEMENTARIOS MATEMÁTICOS
+ TRAMO D · VISIÓN POR COMPUTADORA Y REDES NEURONALES (DEEP LEARNING)
+     ↓
+     ○ De filtros clásicos a convoluciones (CNNs)
+     ↓
+     ○ Clasificación, detección de objetos y segmentación (YOLO, transfer learning)
+     ↓
+     ○ Extracción de características y embeddings visuales
+
+ TRAMO E · INTELIGENCIA ARTIFICIAL GENERATIVA (GenAI) Y MULTIMODALIDAD
+     ↓
+     ○ Modelos de difusión y síntesis visual (Stable Diffusion, inpainting generativo)
+     ↓
+     ○ Modelos de Visión y Lenguaje (VLMs: contrastivos y generativos multimodal)
+     ↓
+     ○ Sistemas de visión agente y pipelines interactivos
+
+ TRAMO F · COMPLEMENTARIOS MATEMÁTICOS Y TRABAJOS APLICADOS
      ↓
      ● Transformaciones lineales 2D, autovalores y PCA ...... complementarios/numpy
-
- TRAMO E · INTEGRACIÓN APLICADA Y EVALUACIÓN
      ↓
      ● TPI 1: Canvas analítica de imagen y rúbrica .......... trabajos/TPI1
 ```
