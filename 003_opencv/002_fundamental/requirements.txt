@@ -1,0 +1,16 @@
+# OpenCV fundamental
+# Laboratorio de Tecnologías de la Imagen Digital — IFTS24
+#
+# Python 3.12. Instalar con:
+#   uv pip install -r requirements.txt
+
+# Cálculo y visualización
+numpy>=2.0
+matplotlib>=3.8
+
+# Visión por computadora
+# Fijado en <5: OpenCV 5.0 quitó cv2.CascadeClassifier de los bindings de Python.
+opencv-python>=4.10,<5
+
+# Entorno de cuadernos
+ipykernel>=6.29

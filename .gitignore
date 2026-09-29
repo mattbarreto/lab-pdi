@@ -1,0 +1,65 @@
+# ─────────────────────────────────────────────────────────────
+# Entornos virtuales y Python
+# ─────────────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+.python-version
+.pytest_cache/
+
+# ─────────────────────────────────────────────────────────────
+# Credenciales y variables de entorno
+# ─────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─────────────────────────────────────────────────────────────
+# Cuadernos y temporales
+# ─────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+_ejecutados/
+
+# Copias de trabajo de estudiantes (para actualizar sin conflictos de merge)
+*_mio.ipynb
+
+# ─────────────────────────────────────────────────────────────
+# Sistema operativo
+# ─────────────────────────────────────────────────────────────
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+desktop.ini
+
+# ─────────────────────────────────────────────────────────────
+# Editores y asistentes de desarrollo / IA
+# ─────────────────────────────────────────────────────────────
+.cursor/
+.claude/
+.gemini/
+.antigravity/
+.copilot/
+.aider*
+.continue/
+CLAUDE.md
+.vscode/
+.idea/
+
+# ─────────────────────────────────────────────────────────────
+# Salidas e imágenes generadas durante prácticas
+# ─────────────────────────────────────────────────────────────
+003_opencv/**/salidas/*
+!003_opencv/**/salidas/README.md
+002_segmentacion/frutos_rojos.png
+002_segmentacion/paisaje.png
+002_segmentacion/texto.png
+002_segmentacion/monedas.png
+002_segmentacion/flowers.jpg
+002_segmentacion/imagen_preprocesada.png
+mi_imagen.jpg
+foto_vertical.jpg
+foto_horizontal.jpg

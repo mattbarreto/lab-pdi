@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>Canvas Analítica</title>
+<meta name="description" content="Trabajo Práctico Integrador 1. Laboratorio de Tecnologías de la Imagen Digital, IFTS N.º 24.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Karla:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme:only light;
+  --paper:#FAF7F5; --ink:#231F21; --soft:#665C60; --rule:#EBE3E1; --tint:#F3EEEC;
+  --accent:#6E4152;
+  --moss:#E9EEE6; --moss-ink:#3E5440;
+  --gold:#F7E8E8; --gold-ink:#7A4048;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:Karla,"Helvetica Neue",system-ui,sans-serif;
+  font-size:18.5px; line-height:1.68; -webkit-font-smoothing:antialiased;
+  padding:0 1.5rem 7rem;
+}
+.wrap{max-width:39rem;margin:0 auto}
+.skip{position:absolute;left:-9999px}
+.skip:focus{position:fixed;left:1rem;top:1rem;background:var(--ink);color:var(--paper);
+  padding:.6rem 1rem;z-index:9}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+header{padding:5.5rem 0 3rem}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.7rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin:0 0 2rem}
+h1{font-family:Fraunces,Georgia,serif;font-size:3.1rem;font-weight:600;
+  font-variation-settings:"SOFT" 40,"WONK" 1;
+  line-height:1.02;letter-spacing:-.02em;margin:0 0 1rem;text-wrap:balance}
+.lead{font-family:Fraunces,Georgia,serif;font-size:1.25rem;font-style:italic;
+  font-weight:400;color:var(--soft);margin:0 0 2.75rem;text-wrap:balance}
+.meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.76rem;
+  line-height:2;color:var(--soft);margin:0;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:1rem 0}
+.meta b{color:var(--ink);font-weight:600}
+
+nav{padding:2.75rem 0 0}
+.rotulo{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.7rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin:0 0 1.1rem}
+nav ul{list-style:none;padding:0;margin:0;display:grid;gap:.15rem}
+nav li{display:grid;grid-template-columns:2.2rem 1fr;align-items:baseline;margin:0}
+nav .m{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.75rem;
+  color:var(--accent);font-variant-numeric:tabular-nums}
+nav a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent;
+  padding:.18rem 0}
+nav a:hover{border-bottom-color:var(--accent)}
+
+h2{font-family:Fraunces,Georgia,serif;font-size:1.7rem;font-weight:600;
+  font-variation-settings:"SOFT" 30;
+  line-height:1.15;letter-spacing:-.015em;text-wrap:balance;
+  margin:4.5rem 0 1.4rem;padding-top:2.25rem;border-top:1px solid var(--rule)}
+h2.fase{display:grid;grid-template-columns:2.6rem 1fr;align-items:baseline}
+h2 .n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.95rem;
+  color:var(--accent);font-weight:500;font-variant-numeric:tabular-nums}
+h3{font-family:Fraunces,Georgia,serif;font-size:1.14rem;font-weight:600;
+  margin:2.6rem 0 .8rem;text-wrap:balance}
+p{margin:0 0 1.2rem}
+strong{font-weight:700}
+a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--accent)}
+ul,ol{padding-left:1.25rem;margin:0 0 1.3rem;display:grid;gap:.45rem}
+li::marker{color:var(--accent)}
+hr{border:0;border-top:1px solid var(--rule);margin:3.25rem 0}
+
+blockquote{margin:1.7rem 0;padding:1.1rem 1.35rem;background:var(--tint);
+  border-left:3px solid var(--soft)}
+blockquote > :last-child{margin-bottom:0}
+blockquote.voy{background:var(--moss);border-left-color:var(--moss-ink);color:var(--moss-ink)}
+blockquote.alerta{background:var(--gold);border-left-color:var(--gold-ink);color:var(--gold-ink)}
+blockquote.voy strong:first-child,blockquote.alerta strong:first-child{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.68rem;
+  letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+
+.term{border-bottom:1px dotted var(--accent);cursor:help;position:relative;
+  font-style:normal}
+.term .tip{visibility:hidden;opacity:0;position:absolute;left:0;bottom:calc(100% + .4rem);
+  width:max-content;max-width:min(22rem,78vw);
+  background:var(--ink);color:var(--paper);
+  font-family:Karla,"Helvetica Neue",system-ui,sans-serif;font-size:.8rem;line-height:1.55;
+  padding:.65rem .85rem;border-radius:2px;transition:opacity .12s ease;z-index:5}
+.term:hover .tip,.term:focus .tip,.term:focus-within .tip{visibility:visible;opacity:1}
+.term .tip a{color:var(--paper);border-bottom-color:var(--paper)}
+@media (max-width:600px){ .term .tip{left:auto;right:0} }
+@media print{ .term .tip{display:none} }
+
+code{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-size:.82em;
+  background:var(--tint);padding:.1em .35em}
+pre{background:var(--tint);border-left:3px solid var(--rule);
+  padding:1rem 1.15rem;overflow-x:auto;margin:1.7rem 0}
+pre code{background:none;padding:0;font-size:.76rem;line-height:1.7}
+
+.tabla{overflow-x:auto;margin:1.85rem 0}
+table{border-collapse:collapse;width:100%;font-size:.85rem;line-height:1.5;
+  font-variant-numeric:tabular-nums}
+th{text-align:left;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--soft);
+  font-weight:500;padding:0 1rem .65rem 0;border-bottom:1px solid var(--ink)}
+td{padding:.75rem 1rem .75rem 0;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:0}
+
+.glosario{margin:0}
+.glosario dt{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:1.05rem;
+  margin:2.2rem 0 .4rem;color:var(--ink);text-wrap:balance}
+.glosario dt:first-child{margin-top:0}
+.glosario dd{margin:0;font-size:.95rem}
+.glosario dd cite{font-style:italic;color:var(--soft)}
+
+footer{margin-top:5.5rem;padding-top:1.75rem;border-top:1px solid var(--rule);
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.72rem;
+  line-height:1.9;color:var(--soft)}
+
+@media (max-width:600px){
+  body{font-size:17px;padding:0 1.15rem 4.5rem}
+  header{padding:3.25rem 0 2rem}
+  h1{font-size:2.15rem}
+  h2{font-size:1.35rem;margin-top:3.25rem}
+  h2.fase{grid-template-columns:2rem 1fr}
+}
+@media print{
+  body{background:#fff;color:#000;font-size:10.5pt;padding:0}
+  nav,.skip{display:none}
+  h2{page-break-after:avoid}
+  blockquote,pre,.tabla{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#contenido">Ir al contenido</a>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">IFTS N.º 24 · DGETyFP · CABA · Borrador de uso interno</p>
+  <h1>Canvas Analítica</h1>
+  <p class="lead">Normalizar un corpus, medir sus imágenes, construir el instrumento para mirarlas todas juntas.</p>
+  <p class="meta">
+    <b>Trabajo Práctico Integrador 1 · Desafío grupal</b><br>
+    Laboratorio de Tecnologías de la Imagen Digital — Prof. Matías Barreto<br>
+    Comisión completa — un solo trabajo — defensa presencial y grupal
+  </p>
+</header>
+
+<nav aria-labelledby="rot-indice">
+  <p class="rotulo" id="rot-indice">Contenido</p>
+  <ul>
+    <li><span class="m">&middot;</span><a href="#de-que-se-trata">De qué se trata</a></li>
+    <li><span class="m">&middot;</span><a href="#tipologia">Tipología y alcance de las categorías</a></li>
+    <li><span class="m">&middot;</span><a href="#el-problema">La pregunta que organiza el desafío</a></li>
+    <li><span class="m">&middot;</span><a href="#voy-vengo">Cómo se trabaja: Voy / Vengo</a></li>
+    <li><span class="m">1</span><a href="#fase-1-normalizacion">Normalización del corpus</a></li>
+    <li><span class="m">2</span><a href="#fase-2-dataset">Dataset con metadata</a></li>
+    <li><span class="m">3</span><a href="#fase-3-aplicacion">La aplicación</a></li>
+    <li><span class="m">4</span><a href="#fase-4-paper">Paper y defensa</a></li>
+    <li><span class="m">&middot;</span><a href="#etica">Datos, consentimiento y alcance ético</a></li>
+    <li><span class="m">&middot;</span><a href="#que-se-entrega">Qué se entrega</a></li>
+    <li><span class="m">&middot;</span><a href="#cronograma">Cronograma</a></li>
+    <li><span class="m">&middot;</span><a href="#evaluacion">Evaluación</a></li>
+    <li><span class="m">&middot;</span><a href="#glosario">Glosario</a></li>
+  </ul>
+</nav>
+
+<main id="contenido">
+
+<h2 id="de-que-se-trata">De qué se trata</h2>
+<p>En <em>Instagram y la imagen contemporánea</em>, Manovich no se queda en proponer categorías para mirar una foto a la vez: distingue tres tipos comunes de fotografía en Instagram —<span class="term" tabindex="0">casual<span class="tip">Fotos cuyo propósito principal es documentar o compartir una experiencia, una situación, una persona o un grupo. La función representativa suele predominar sobre el control deliberado de variables formales según las convenciones de la "buena fotografía" — no significa ausencia de reglas ni de estética. Ver glosario.</span></span>, <span class="term" tabindex="0">profesional<span class="tip">Uso sistemático de las reglas de "buena fotografía" codificadas en manuales desde la segunda mitad del siglo XX —regla de los tercios, exposición que muestra detalle en sombras, medios tonos y realces, colores balanceados sin tono dominante—, sin importar si el autor las aplicó por conocimiento o por imitación. No se refiere a si a la persona le pagan. Ver glosario.</span></span> y de <span class="term" tabindex="0">diseño<span class="tip">También llamada "estilizada". Convenciones visuales vinculadas con el diseño, el arte moderno y formas de estilización contemporánea: composición, espacio, atmósfera, planitud o organización cromática — leídas y discutidas foto por foto, no como consistencia de una galería completa. Ver glosario.</span></span>— y aplica métodos computacionales para observar corpus completos de artefactos culturales, encontrando patrones que ninguna mirada foto por foto podría detectar. Este desafío toma esa propuesta al pie de la letra.</p>
+<p>Cada estudiante fotografió 9 escenas en formato 1:1, repartidas en esos tres tipos. El tipo no lo calculó ningún programa: lo asignó quien tomó la foto, en el momento de tomarla, a partir de una lectura propia de la tipología de Manovich. Es un dato interpretativo y autoasignado, y viaja junto con cada imagen como una etiqueta más. Con veinte integrantes en el curso, el corpus resultante son 180 fotografías que ninguna persona sacó pensando en el conjunto — el conjunto solo existe si el grupo lo construye.</p>
+<p>Este desafío no se reparte en subgrupos que entregan versiones distintas: <strong>es un solo trabajo de la comisión completa.</strong> Un corpus, un dataset, una aplicación, un repositorio, un paper — con veinte nombres en el mismo README, no cinco entregas paralelas.</p>
+<div class="tabla"><table>
+<thead><tr><th></th><th>Dato</th></tr></thead>
+<tbody>
+<tr><td><strong>Corpus</strong></td><td>20 × 9 = 180 imágenes</td></tr>
+<tr><td><strong>Formato</strong></td><td>1:1</td></tr>
+<tr><td><strong>Consigna a estudiantes</strong></td><td>semana del 08/09/2026</td></tr>
+<tr><td><strong>Entrega</strong></td><td>1.ª semana de octubre 2026</td></tr>
+<tr><td><strong>Defensa</strong></td><td>presencial, grupal, dentro de esa misma semana</td></tr>
+<tr><td><strong>Marco teórico</strong></td><td>Manovich — Analítica Cultural</td></tr>
+</tbody>
+</table></div>
+
+<h2 id="tipologia">Tipología y alcance de las categorías</h2>
+<p>Casual, profesional y de diseño no nombran esencias fijas de una foto, ni son una clasificación exhaustiva o mutuamente excluyente. Manovich las propone como tipos históricos y estéticos —convenciones técnicas, sociales y de producción reconocibles en Instagram entre 2012 y 2015—, no como clases naturales que un algoritmo pudiera derivar directamente de los píxeles. Una misma persona produce fotos de más de un tipo, y una foto puede resultar ambigua o híbrida entre dos.</p>
+<p>Por eso, en este desafío nadie "declara" una categoría verdadera: cada estudiante <strong>asigna un tipo a partir de una lectura situada de la tipología de Manovich</strong>, y esa asignación puede ser discutible. La ambigüedad no es un defecto del dataset — es parte de lo que hay para analizar, y por eso el dataset de la Fase 2 registra también la confianza de cada etiqueta y si el caso es límite.</p>
+<p>El libro de Manovich es el punto de partida de este desafío, no su autoridad final: sirve para mostrar estas tres categorías ya formuladas y para mostrar que un objeto fotográfico puede leerse con técnicas computacionales — no para citarlo al pie de la letra en cada afirmación del paper. Se usan sus categorías porque permiten operacionalizar algo que de otro modo quedaría en el terreno de la impresión ("esta foto se ve más prolija"); el grupo no está obligado a coincidir con sus conclusiones sobre Instagram para aprovechar la herramienta.</p>
+
+<h2 id="el-problema">La pregunta que organiza el desafío</h2>
+<p>La pregunta no es <em>"¿lograron construir una aplicación?"</em>. Son estas: <strong>¿qué relaciones —si las hay— aparecen entre las categorías con las que quienes producen las imágenes las describen y los descriptores visuales que nuestro pipeline calcula? ¿Qué dimensiones de esas categorías quedan fuera de esos descriptores?</strong></p>
+<p>No es una prueba de verdad entre una declaración subjetiva y una evidencia objetiva escondida en los píxeles: los píxeles no guardan una respuesta esperando a ser revelada, son valores de color y luminancia que se vuelven variable recién después de decisiones de normalización, espacio de color, umbrales y cuantización. Una diferencia clara entre tipos, un solapamiento amplio, o la ausencia de relación entre una variable y los tipos asignados son, los tres, resultados válidos. Lo que se evalúa es si el grupo puede explicar qué mide cada variable, qué no mide, y qué interpretación sostiene con la evidencia disponible — no que el dataset produzca tres grupos prolijamente separados.</p>
+<p>El Canvas Analítico es el instrumento que permite hacerse esa pregunta con las 180 imágenes a la vez, en vez de mirarlas una por una. La aplicación no es el objetivo en sí mismo — es la traducción de una modelización a un artefacto que se puede tocar, reordenar y poner en duda.</p>
+
+<h2 id="voy-vengo">Cómo se trabaja: Voy / Vengo</h2>
+<p>El código no se pide ni se acepta de una vez. Cada decisión clave del proyecto —qué mide cada variable, qué tipo se le asigna a una foto ambigua, cómo se arma el canvas— se registra en una bitácora, igual que en otros espacios de la carrera:</p>
+<blockquote>
+<p><strong>Voy</strong> — le pedís al agente una propuesta concreta sobre una decisión del proyecto.
+<strong>Vengo</strong> — volvés con criterio propio y decidís qué se sostiene.</p>
+</blockquote>
+<p>Con preguntas de auditoría propias del procesamiento de imágenes:</p>
+<ul>
+<li>¿El método es correcto para nuestro corpus, no solo en teoría?</li>
+<li>¿Qué supuesto hace sobre espacio de color o iluminación, y lo dice explícitamente?</li>
+<li>¿Lo contrastamos con algo visto en el curso o con otra fuente?</li>
+<li>¿Puede introducir un sesgo al distinguir "profesional" de "casual" — de tono de piel, de equipamiento, de composición?</li>
+<li>¿Qué mantenemos, corregimos, ampliamos o descartamos de la propuesta?</li>
+</ul>
+<p>Cada una de las cuatro fases siguientes trae <strong>un prompt sugerido</strong>, muy cercano a uno real, solo para ilustrar el tipo de pedido — no hace falta copiarlo tal cual. Esta bitácora se entrega junto con el paper y se defiende con el mismo peso que el código.</p>
+
+<h2 id="fase-1-normalizacion" class="fase"><span class="n">1</span>Normalización del corpus</h2>
+<p>Protocolo documentado y aplicado a las 180 imágenes. Distingue explícitamente dos operaciones que no son lo mismo:</p>
+<ul>
+<li><strong>Normalización técnica</strong>: conversión a sRGB, corrección de orientación EXIF <em>antes</em> de leer dimensiones o calcular cualquier variable, una dimensión final única (por ejemplo 1024 × 1024 px), un formato de archivo único y documentado (JPEG con calidad fija o PNG), y un identificador de imagen estable que no reutilice el nombre de archivo original si contiene información personal. Se aplica sí o sí, y se registra el formato, ancho, alto y orientación originales antes de transformar.</li>
+<li><strong>Normalización tonal</strong>: ecualizar contraste, brillo, saturación o balance tonal. <strong>No se aplica antes de medir</strong> — borraría justamente la variación que el grupo decidió describir. Si en algún momento se usa (por ejemplo, para una vista en la interfaz), es sobre una copia separada, un paso aparte y documentado, nunca sobre el corpus que se usa para extraer variables.</li>
+</ul>
+<p>El "1:1" de la consigna es una decisión, no un detalle técnico: cada estudiante encuadra o recorta deliberadamente sus 9 fotografías a 1:1 antes de entregarlas — ese recorte es parte de la decisión fotográfica. El pipeline no vuelve a recortar: solo redimensiona a la dimensión final acordada.</p>
+<blockquote class="voy">
+<p><strong>Prompt sugerido</strong></p>
+<p>«Tenemos 180 fotografías 1:1, sacadas con celulares distintos y en formatos de archivo variados. Necesitamos un protocolo de normalización técnica —corrección de orientación EXIF, conversión a sRGB, redimensionado a una dimensión final única, formato de archivo único— que se aplique por igual a las 180 con Python, usando OpenCV o Pillow, y que registre el formato y las dimensiones originales de cada imagen antes de transformarla. No debe incluir ecualización de contraste, brillo ni saturación: eso se aplicaría antes de medir las variables y borraría la variación que después queremos describir. Proponé el pipeline paso a paso y explicá qué hace cada operación.»</p>
+</blockquote>
+
+<h2 id="fase-2-dataset" class="fase"><span class="n">2</span>Dataset con metadata</h2>
+<p>Una tabla (CSV, Parquet o JSON) con, como mínimo, estas columnas:</p>
+<div class="tabla"><table>
+<thead><tr><th>Columna</th><th>Función</th></tr></thead>
+<tbody>
+<tr><td><code>id_imagen</code></td><td>Identificador estable, no dependiente del nombre de archivo original</td></tr>
+<tr><td><code>autor_id</code></td><td>Código o seudónimo — evitar nombre completo si el repo es público</td></tr>
+<tr><td><code>tipo_manovich</code></td><td><code>casual</code>, <code>profesional</code> o <code>diseno</code> — el tipo asignado, no una "categoría declarada"</td></tr>
+<tr><td><code>confianza_etiqueta</code></td><td><code>alta</code>, <code>media</code> o <code>baja</code></td></tr>
+<tr><td><code>caso_limite</code></td><td>Booleano — ¿la propia persona autora dudó entre dos tipos al fotografiar?</td></tr>
+<tr><td><code>justificacion_etiqueta</code></td><td>80 a 120 palabras: por qué se asignó ese tipo y qué ambigüedad reconoce</td></tr>
+<tr><td>Variables de color e histograma</td><td>Las que el grupo defina — ver más abajo</td></tr>
+</tbody>
+</table></div>
+<p>Cada variable de color o histograma elegida se justifica por escrito: qué mide, por qué esa y no otra, qué matices de la foto deja afuera al reducirla a un número. La columna <code>justificacion_etiqueta</code> no se convierte en variable cuantitativa: queda como evidencia cualitativa para contrastar con los gráficos y para discutir los casos límite en la defensa.</p>
+<p>No conviene medir "profesionalidad" o "diseño" como una variable directa. Conviene medir propiedades más acotadas y describibles con lo que ya sabemos —separar canales, calcular histogramas, cuantizar color (ver 001 y 002)— y después explorar cómo se distribuyen en relación con los tipos asignados. Esta selección es un punto de partida razonable —no la única opción—:</p>
+<div class="tabla"><table>
+<thead><tr><th>Variable</th><th>Qué describe</th><th>Límite explícito</th></tr></thead>
+<tbody>
+<tr><td>Mediana de luminancia</td><td>Nivel tonal global de la imagen</td><td>No equivale a "exposición correcta" ni a calidad técnica</td></tr>
+<tr><td>Dispersión de luminancia (desvío estándar o rango intercuartílico)</td><td>Contraste: qué tan repartidos están los tonos</td><td>No mide el rango dinámico de la escena original, solo el de la imagen ya capturada</td></tr>
+<tr><td>Proporción de píxeles en sombras / altas luces</td><td>Presencia relativa de zonas oscuras y claras a partir del <span class="term" tabindex="0">histograma<span class="tip">La distribución de frecuencias de los valores tonales de una imagen. Ver glosario.</span></span> de la imagen</td><td>Los umbrales que separan "sombra" de "medio tono" son una convención del grupo, y el procesado automático del celular ya intervino antes</td></tr>
+<tr><td><span class="term" tabindex="0">Matiz dominante<span class="tip">El tono (hue) más frecuente de una imagen, o su matiz medio circular ponderado por saturación. No es un promedio aritmético simple de valores de hue: el matiz es una variable circular (0° y 360° son el mismo rojo), y promediarlo linealmente puede dar un resultado sin sentido. Ver glosario.</span></span> y saturación media</td><td>Familia cromática predominante e intensidad de color global</td><td>Depende de filtros, balance de blancos, y de la cámara de cada celular</td></tr>
+<tr><td>Dominancia o diversidad cromática (cuantización + color más frecuente)</td><td>Cuánto concentra la imagen en una familia de color</td><td>Depende del método y de la cantidad de niveles de cuantización elegidos</td></tr>
+</tbody>
+</table></div>
+<p>Dos precisiones antes de implementarlas. Primero, la escala: estas cinco variables se calculan <strong>por imagen</strong>, una fila por fotografía en <code>metadata.csv</code>. Los histogramas agregados y las distribuciones por tipo de la Fase 4 son una agregación posterior, del corpus completo — no se infiere una propiedad de una foto individual a partir de un histograma agregado de grupo.</p>
+<p>Segundo, los umbrales de "sombra" y "altas luces" necesitan una convención explícita para que las 180 imágenes se midan con el mismo criterio. Una convención inicial razonable: luminancia normalizada entre 0 y 1, sombra si <code>L &lt; 0.10</code>, altas luces si <code>L &gt; 0.90</code>. El grupo revisa esos valores contra una muestra del propio corpus y decide si los conserva o los ajusta — pero el umbral final se documenta en el README, se aplica igual a las 180 imágenes, y si se cambia después de haber medido, hay que recalcular todo el dataset.</p>
+<blockquote class="voy">
+<p><strong>Prompt sugerido</strong></p>
+<p>«Con numpy y scikit-image ya sabemos separar canales RGB, calcular histogramas por canal y cuantizar una imagen a menos niveles de color. A partir de eso, ayudame a implementar estas cinco variables para cada imagen del corpus: mediana de luminancia, dispersión de luminancia, proporción de píxeles en sombras y en altas luces (con umbrales de luminancia normalizada que pueda definir yo), matiz dominante y saturación media —explicame por qué no conviene promediar el hue directamente, al ser una variable circular—, y dominancia cromática por cuantización. Para cada una, explicame qué mide, qué no mide, y qué matiz de la foto se pierde al reducirla a ese número — no me digas cuál "distingue mejor" a los tres tipos, todavía no lo sabemos.»</p>
+</blockquote>
+
+<h2 id="fase-3-aplicacion" class="fase"><span class="n">3</span>La aplicación</h2>
+<p>La referencia directa es <strong>ImagePlot</strong>, la herramienta que Lev Manovich y el Software Studies Initiative construyeron para visualizar colecciones completas de imágenes ordenándolas por variables medibles sobre un plano. El Canvas Analítico persigue esa misma idea, con las técnicas ya vistas en la cursada (numpy, scikit-image, OpenCV) y una interfaz propia en Streamlit o Gradio.</p>
+<p>Se piensa en dos capas separadas, y esa separación es en sí misma una decisión de diseño que hay que poder justificar:</p>
+<ul>
+<li><strong>Pipeline de extracción</strong> — numpy, scikit-image, OpenCV: lee cada imagen normalizada y calcula sus variables. Es el contenido de la materia.</li>
+<li><strong>Interfaz</strong> — Streamlit o Gradio: solo lee la tabla que produjo el pipeline y calcula el layout del canvas. Carga la carpeta del corpus normalizado, dispone las 180 imágenes y las reagrupa según el criterio que se elija inspeccionar. Con una sola variable activa, ordena en línea (ranking de mayor a menor). Con dos variables simultáneas, posiciona en un plano X/Y — selector de eje X y eje Y entre las columnas numéricas disponibles. No hay arrastre manual: el reacomodo es siempre calculado a partir de la metadata. No debería depender de nombres fijados de variables visuales —por ejemplo, <code>saturacion_media</code> o <code>contraste_rgb</code> escritos a mano en el código—: tiene que detectar automáticamente qué columnas numéricas están disponibles como candidatas para los ejes X e Y, y reconocer aparte —por convención documentada o archivo de configuración— las columnas de identificación, etiqueta y texto (<code>id_imagen</code>, <code>tipo_manovich</code>, <code>justificacion_etiqueta</code>, etc.) que no van en esos ejes.</li>
+<li><strong>Filtro y detalle</strong> — filtrar por <code>tipo_manovich</code>, <code>confianza_etiqueta</code> y <code>caso_limite</code>; colorear o marcar cada punto según el tipo asignado; un panel o tooltip que muestre la miniatura ampliada, las variables calculadas, el tipo asignado y su justificación al pasar por una imagen; una forma de destacar los casos extremos (valores máximos, mínimos, y los más cercanos al centro); una leyenda que aclare qué variable representa cada eje.</li>
+</ul>
+<blockquote>
+<p><strong>Fuera de alcance en esta entrega</strong> — Detección de rostros con OpenCV y clasificación por categorías con modelos preentrenados (perros, casas, etc.) quedan para módulos futuros del curso. No se implementan ahora. Lo único que se pide hoy es que la tabla de metadata pueda recibir columnas nuevas sin que haya que rediseñar la interfaz cuando llegue ese momento.</p>
+</blockquote>
+<blockquote class="voy">
+<p><strong>Prompt sugerido</strong></p>
+<p>«Ya armamos apps en Streamlit (o Gradio) antes. Ayudame a estructurar una app que lea una tabla metadata.csv con columnas de identificación (id_imagen, tipo_manovich, confianza_etiqueta, justificacion_etiqueta) y columnas numéricas de color/histograma, y ubique cada una de las 180 imágenes en un plano X/Y según dos columnas numéricas que la persona usuaria elija de un menú desplegable, coloreadas según tipo_manovich. Con una sola columna activa, debe ordenar en línea (ranking). Necesito también un filtro por tipo y por caso límite, y un panel que muestre la miniatura, las variables y la justificación de la etiqueta al seleccionar un punto. La app tiene que detectar sola qué columnas son numéricas (candidatas a los ejes) y cuáles son de identificación o texto — no quiero nombres de variables de color escritos a mano en el código.»</p>
+</blockquote>
+
+<h2 id="fase-4-paper" class="fase"><span class="n">4</span>Paper y defensa</h2>
+<p>No es un reporte de resultados solamente. El paper documenta las decisiones de modelización y muestra la bitácora Voy/Vengo completa, con cuatro productos analíticos mínimos:</p>
+<ol>
+<li><strong>Tabla descriptiva por tipo</strong> — cantidad de imágenes, media, mediana y una medida de dispersión de cada variable, para <code>casual</code>, <code>profesional</code> y <code>diseno</code>.</li>
+<li><strong>Gráfico de distribución por variable</strong> — un <em>strip plot</em>, <em>boxplot</em> o <em>violin plot</em> que muestre los puntos individuales; no un gráfico de barras con un solo promedio por tipo.</li>
+<li><strong>El canvas de dos variables</strong> — la misma vista X/Y de la aplicación, con los puntos coloreados según el tipo asignado.</li>
+<li><strong>Casos discordantes</strong> — 3 a 5 imágenes cuyos valores contradicen lo esperado para su tipo, o que caen en la zona de otro. Por cada una: la imagen, sus variables, el tipo asignado, la justificación original, y una lectura interpretativa del grupo.</li>
+</ol>
+<p>La ausencia de diferencias claras entre tipos, un solapamiento amplio, o varios casos difíciles de clasificar son resultados válidos y se reportan como tales. No se evalúa que el dataset produzca tres grupos visualmente separados.</p>
+<p><strong>Regla de redacción</strong>: toda conclusión se refiere al corpus de esta comisión, producido bajo estas condiciones de toma, etiquetado y procesamiento — no a la fotografía en general, ni a otro grupo, ni a otro momento del curso.</p>
+<blockquote class="voy">
+<p><strong>Prompt sugerido</strong></p>
+<p>«Con la tabla de metadata ya completa, ayudame a construir con matplotlib un boxplot o violin plot que muestre, para cada una de nuestras cinco variables, cómo se distribuye entre los tipos casual, profesional y diseño —con los puntos individuales visibles, no solo el promedio—. Quiero poder ver de un vistazo si hay solapamiento entre tipos o no, y en qué variable.»</p>
+</blockquote>
+
+<h3>Escritura asistida con LLM</h3>
+<p>Una vez que el grupo tiene los cuatro productos de arriba, puede usar un modelo de lenguaje para ayudar a redactar el paper — pero como editor sobre evidencia ya producida, nunca como quien la produce. Antes de pedir un borrador, conviene tener escritas en una <code>matriz-hallazgos.md</code> las afirmaciones que se quieren sostener, con su evidencia (qué tabla o gráfico la respalda), su alcance (descriptivo de este corpus, no una generalización) y su límite o contraejemplo.</p>
+<ul>
+<li><strong>Sirve para</strong>: proponer una estructura a partir de esos materiales, convertir la matriz en un primer borrador, mejorar cohesión y claridad, señalar afirmaciones sin evidencia identificable o generalizaciones que el corpus no sostiene.</li>
+<li><strong>No sirve para</strong>: inventar resultados, porcentajes o referencias; decidir solo qué tipo le corresponde a una imagen; redactar a partir de "escribime un paper sobre nuestro proyecto" sin la matriz y las tablas ya armadas.</li>
+</ul>
+<blockquote class="voy">
+<p><strong>Prompt sugerido</strong></p>
+<p>«Te paso nuestra matriz de hallazgos y las tablas descriptivas del proyecto. No inventes resultados, cifras ni referencias que no estén en lo que te adjunto: si falta un dato para una sección, marcalo como [dato faltante] en vez de completarlo. Ayudame a convertir esta matriz en un primer borrador de la sección de resultados, distinguiendo claramente qué es dato observado y qué es interpretación nuestra.»</p>
+</blockquote>
+<p>El paper incluye una breve declaración de uso: qué se le pidió al modelo, para qué (redacción y edición, no producción de resultados), y que las afirmaciones, cifras y referencias fueron verificadas por el grupo. Se documenta con el mismo formato Voy/Vengo que el resto del proyecto — no hace falta un dispositivo nuevo.</p>
+<p id="evaluacion">No se evalúa la complejidad técnica de la aplicación. Se evalúa: la calidad de las variables elegidas y su justificación, la evidencia del proceso Voy/Vengo, la coherencia entre lo que dice el paper y lo que hace el código, y que cualquier integrante de la comisión pueda explicar cualquier decisión — no solo quien la escribió. Rúbrica detallada: <a href="rubrica-evaluacion.html">ver la rúbrica de defensa</a>.</p>
+
+<h2 id="etica">Datos, consentimiento y alcance ético</h2>
+<p>Parte del corpus son fotografías casuales que pueden mostrar rostros identificables de terceros. Antes de publicar el repositorio, el curso define y documenta por escrito un criterio de consentimiento o anonimización — no es un trámite aparte, es una decisión de modelización más, y entra en el paper. La política se apoya en una distinción simple: <strong>lo público y lo restringido no viven en el mismo lugar.</strong></p>
+<ul>
+<li><strong>Repositorio público (GitHub)</strong>: código, documentación, requirements, dataset derivado y metadata anonimizada, estadísticas, gráficos, bitácora y paper, y solo las imágenes con consentimiento explícito de publicación.</li>
+<li><strong>Corpus completo</strong>: se conserva en almacenamiento del aula o institucional con acceso restringido, salvo que cada imagen tenga consentimiento explícito de publicación pública.</li>
+<li><strong>Terceros identificables</strong>: se excluyen, se anonimizan, o se publican solo con consentimiento verificable.</li>
+<li><strong>Metadatos sensibles</strong>: se remueve geolocalización, fecha y hora precisas, datos del dispositivo, y cualquier identificador personal que no sea necesario — por eso <code>id_imagen</code> no reutiliza el nombre de archivo original.</li>
+<li><strong>Autoría y licencia</strong>: se define de antemano si los créditos van con nombre completo, seudónimo o código, y no se asume que el código y las fotografías comparten la misma licencia — pueden, y probablemente deban, ser distintas.</li>
+</ul>
+
+<h2 id="que-se-entrega">Qué se entrega</h2>
+<p><strong>El repositorio es la fuente pública, documentada y reproducible de la entrega.</strong> Contiene el código, las instrucciones para correrlo, la metadata permitida, la documentación metodológica, el paper y la bitácora. Los consentimientos, las imágenes no publicables y cualquier información sensible se conservan aparte, en el anexo institucional de acceso restringido — no en este repositorio.</p>
+<pre><code>canvas-analitica/
+├── README.md              Protocolo de normalización, cómo correr el pipeline
+│                          y la app, estructura de carpetas, licencia,
+│                          criterio de consentimiento
+├── datos/
+│   ├── corpus_normalizado/   Imágenes con consentimiento de publicación
+│   └── metadata.csv          id_imagen · autor_id · tipo_manovich ·
+│                              confianza_etiqueta · caso_limite ·
+│                              justificacion_etiqueta · variables de color e histograma
+├── pipeline/                 numpy, scikit-image, OpenCV — calcula las variables
+├── app/                      Streamlit o Gradio — lee metadata.csv y arma el canvas
+├── paper/                    decisiones de modelización, tipo asignado vs. variables,
+│                              matriz-hallazgos.md, declaración de uso de IA,
+│                              bitácora Voy/Vengo
+└── requirements.txt
+</code></pre>
+
+<h2 id="cronograma">Cronograma</h2>
+<div class="tabla"><table>
+<thead><tr><th>Fecha</th><th>Qué pasa</th></tr></thead>
+<tbody>
+<tr><td>08/09/2026</td><td>Se comparte esta consigna con el curso.</td></tr>
+<tr><td>Oct. 2026</td><td>Entrega: repositorio, dataset, app funcionando y paper — primera semana de octubre.</td></tr>
+<tr><td>A coordinar</td><td>Defensa presencial grupal, dentro de esa misma semana.</td></tr>
+</tbody>
+</table></div>
+
+<h2 id="glosario">Glosario</h2>
+<p>Términos tomados de Lev Manovich, <cite>Instagram y la imagen contemporánea</cite> (México: UAM, 2020), salvo donde se indica otra fuente. Cada uno de ellos también aparece con una nota emergente (<span class="term" tabindex="0">así<span class="tip">Pasá el mouse o el foco del teclado sobre un término subrayado con puntos para ver su definición corta. Esta lista trae la versión completa.</span></span>) la primera vez que se usa en el texto.</p>
+<dl class="glosario">
+
+<dt>Foto casual</dt>
+<dd>Fotos cuyo propósito principal es documentar o compartir una experiencia, una situación, una persona o un grupo. La función representativa suele predominar sobre el control deliberado de variables formales según las convenciones de la "buena fotografía" profesional. <strong>No significa ausencia de convenciones, de estética, ni "mala foto" deliberada</strong> — es un tipo definido por su función, no por un descuido técnico a producir a propósito. Manovich distingue el término de la "fotografía personal" o "modo casero" de décadas anteriores —dirigida a familia y amigos—, con la que está emparentado pero no es idéntico.</dd>
+
+<dt>Foto profesional</dt>
+<dd>Uso sistemático de las reglas de "buena fotografía" codificadas en manuales y videos instructivos desde la segunda mitad del siglo XX, sin importar si el autor las aplicó con conocimiento o por mera imitación. Manovich aclara que el término se refiere a la estética de la imagen, no a si a quien la tomó le pagan por hacerlo.</dd>
+
+<dt>Foto de diseño (o estilizada)</dt>
+<dd>Convenciones visuales vinculadas con el diseño, el arte moderno, la fotografía editorial y formas de estilización contemporánea: atención a la composición, al espacio, a la atmósfera, al recorte, a la planitud o a la organización cromática. Estrategias típicas: mayor brillo, mayor contraste, alta o muy baja saturación, espacio negativo, fondos blancos, composiciones en diagonal, vista cenital ("flat lay"). En Manovich estas convenciones se observan a escala de una galería completa y consistente; en este proyecto se leen y discuten en fotografías individuales, sin exigirles esa consistencia de feed. Junto con las profesionales, son lo que Alise Tifentale llama "fotografía competitiva": sus autores compiten por likes y seguidores.</dd>
+
+<dt>Tipo asignado (vs. "categoría declarada")</dt>
+<dd>En este TPI se prefiere "tipo asignado" a "categoría declarada" a propósito. Casual, profesional y de diseño no son propiedades objetivas de una foto que alguien pueda "declarar" correcta o incorrectamente: son una lectura situada de la tipología de Manovich, hecha por quien fotografió. Por eso el dataset registra también <code>confianza_etiqueta</code> y <code>caso_limite</code>: la ambigüedad es información, no ruido a eliminar.</dd>
+
+<dt>Regla de los tercios</dt>
+<dd>Una de las reglas codificadas de "buena fotografía" profesional, junto con la exposición adecuada (que muestra detalle en sombras, medios tonos y realces), el uso de líneas de orientación, y el uso de colores balanceados sin un tono dominante.</dd>
+
+<dt>Sombras, medios tonos y realces</dt>
+<dd>Los tres tramos del rango tonal de una imagen —oscuro, medio, claro—. Una exposición "adecuada", según las reglas de la fotografía profesional, muestra detalle en los tres, sin quemar los realces ni perder las sombras en negro puro.</dd>
+
+<dt>Tono dominante / color dominante</dt>
+<dd>Cuando un color o tono ocupa una porción desproporcionada de la imagen. Lo opuesto de "colores balanceados", uno de los criterios de la fotografía profesional. Las fotos de diseño, en cambio, suelen buscarlo deliberadamente como parte de su estilo.</dd>
+
+<dt>Histograma (de escala de grises o de color)</dt>
+<dd>La distribución de frecuencias de los valores tonales de una imagen. Manovich compara los histogramas agregados de secuencias completas de fotos: las profesionales dan un histograma "casi plano" —capturan todos los tonos de gris por igual—, mientras que las de diseño muestran "un pico estrecho" que corresponde a su corto rango de tonos claros dominantes.</dd>
+
+<dt>Luminosidad promedio (o brillo promedio)</dt>
+<dd>El valor medio de brillo de una imagen, en una escala de 0 a 255. Manovich la usa para comparar tendencias entre tipos en su propio corpus — no como un umbral fijo que debiera repetirse en cualquier otro.</dd>
+
+<dt>Matiz dominante (o matiz medio circular)</dt>
+<dd>El tono (<cite>hue</cite>) más frecuente de una imagen, o su media circular ponderada por saturación. No debe calcularse como un promedio aritmético simple de valores de hue: el matiz es una variable circular (0° y 360° son el mismo rojo), y promediar linealmente dos rojos cercanos al límite puede dar, por error, un resultado cercano al cian. Junto con la luminosidad, es el tipo de variable que organiza los ejes de proyectos como <cite>phototrails.net</cite>.</dd>
+
+<dt>Espacio negativo</dt>
+<dd>Áreas amplias, vacías y monocromáticas, sin gradación ni detalle. Una de las estrategias visuales que Manovich identifica en las fotos de diseño.</dd>
+
+<dt>Meta-automatización</dt>
+<dd>El hecho de que muchas reglas de "buena fotografía" —enfoque en rostros, mejora de nitidez, balance de histogramas de escala de grises y color— ya vienen aplicadas automáticamente por la cámara del teléfono antes de que la persona que fotografía decida nada.</dd>
+
+<dt>Fotografía competitiva</dt>
+<dd>Término de Alise Tifentale que Manovich adopta para las fotos profesionales y de diseño: a diferencia de las casuales, sus autores compiten por likes y seguidores siguiendo —o imitando— un conjunto reconocible de reglas estéticas.</dd>
+
+<dt>ImagePlot / phototrails.net</dt>
+<dd>ImagePlot es la herramienta (macro de ImageJ) que el Software Studies Initiative de Manovich construyó para visualizar colecciones completas de imágenes ordenándolas por variables medibles sobre un plano. <cite>phototrails.net</cite> es uno de los proyectos hechos con ella: compara millones de fotos de Instagram de distintas ciudades organizadas por luminosidad y matiz promedio. Es la referencia directa del Canvas Analítico de este TPI.</dd>
+
+</dl>
+
+</main>
+
+<footer>
+  Documento de trabajo — borrador para revisar con la profesora ayudante antes de compartir con el curso.<br>
+  Laboratorio de Tecnologías de la Imagen Digital — IFTS N.º 24 — v2 · 07/09/2026
+</footer>
+
+</div>
+</body>
+</html>

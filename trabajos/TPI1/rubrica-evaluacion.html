@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>Rúbrica de defensa</title>
+<meta name="description" content="Rúbrica de defensa del Canvas Analítica — TPI 1, Laboratorio de Tecnologías de la Imagen Digital, IFTS N.º 24.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Karla:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme:only light;
+  --paper:#FAF7F5; --ink:#231F21; --soft:#665C60; --rule:#EBE3E1; --tint:#F3EEEC;
+  --accent:#6E4152;
+  --moss:#E9EEE6; --moss-ink:#3E5440;
+  --gold:#F7E8E8; --gold-ink:#7A4048;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:Karla,"Helvetica Neue",system-ui,sans-serif;
+  font-size:18.5px; line-height:1.68; -webkit-font-smoothing:antialiased;
+  padding:0 1.5rem 7rem;
+}
+.wrap{max-width:39rem;margin:0 auto}
+.skip{position:absolute;left:-9999px}
+.skip:focus{position:fixed;left:1rem;top:1rem;background:var(--ink);color:var(--paper);
+  padding:.6rem 1rem;z-index:9}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+header{padding:5.5rem 0 3rem}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.7rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin:0 0 2rem}
+h1{font-family:Fraunces,Georgia,serif;font-size:3.1rem;font-weight:600;
+  font-variation-settings:"SOFT" 40,"WONK" 1;
+  line-height:1.02;letter-spacing:-.02em;margin:0 0 1rem;text-wrap:balance}
+.lead{font-family:Fraunces,Georgia,serif;font-size:1.25rem;font-style:italic;
+  font-weight:400;color:var(--soft);margin:0 0 2.75rem;text-wrap:balance}
+.lead strong{font-style:normal;color:var(--ink)}
+.meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.76rem;
+  line-height:2;color:var(--soft);margin:0;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:1rem 0}
+.meta b{color:var(--ink);font-weight:600}
+
+nav{padding:2.75rem 0 0}
+.rotulo{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.7rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin:0 0 1.1rem}
+nav ul{list-style:none;padding:0;margin:0;display:grid;gap:.15rem}
+nav li{display:grid;grid-template-columns:2.2rem 1fr;align-items:baseline;margin:0}
+nav .m{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.75rem;
+  color:var(--accent);font-variant-numeric:tabular-nums}
+nav a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent;
+  padding:.18rem 0}
+nav a:hover{border-bottom-color:var(--accent)}
+
+h2{font-family:Fraunces,Georgia,serif;font-size:1.7rem;font-weight:600;
+  font-variation-settings:"SOFT" 30;
+  line-height:1.15;letter-spacing:-.015em;text-wrap:balance;
+  margin:4.5rem 0 1.4rem;padding-top:2.25rem;border-top:1px solid var(--rule)}
+h3{font-family:Fraunces,Georgia,serif;font-size:1.14rem;font-weight:600;
+  margin:0 0 .9rem;text-wrap:balance;display:grid;grid-template-columns:1.8rem 1fr;
+  align-items:baseline}
+h3 .n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.85rem;
+  color:var(--accent);font-weight:500;font-variant-numeric:tabular-nums}
+p{margin:0 0 1.2rem}
+strong{font-weight:700}
+a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--accent)}
+
+.criterio{margin:0 0 2.75rem}
+.criterio:last-child{margin-bottom:0}
+
+.callout{margin:0 0 .9rem;padding:1rem 1.25rem;border-left:3px solid var(--soft);
+  background:var(--tint);font-size:.94rem}
+.callout > :last-child{margin-bottom:0}
+.callout .rotulo-inline{display:block;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
+  margin-bottom:.4rem}
+.callout.buscamos{background:var(--moss);border-left-color:var(--moss-ink);color:var(--moss-ink)}
+.callout.alerta{background:var(--gold);border-left-color:var(--gold-ink);color:var(--gold-ink)}
+
+blockquote{margin:1.7rem 0;padding:1.1rem 1.35rem;background:var(--tint);
+  border-left:3px solid var(--soft)}
+blockquote > :last-child{margin-bottom:0}
+
+footer{margin-top:5.5rem;padding-top:1.75rem;border-top:1px solid var(--rule);
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.72rem;
+  line-height:1.9;color:var(--soft)}
+
+@media (max-width:600px){
+  body{font-size:17px;padding:0 1.15rem 4.5rem}
+  header{padding:3.25rem 0 2rem}
+  h1{font-size:2.15rem}
+  h2{font-size:1.35rem;margin-top:3.25rem}
+}
+@media print{
+  body{background:#fff;color:#000;font-size:10.5pt;padding:0}
+  nav,.skip{display:none}
+  h2{page-break-after:avoid}
+  .criterio{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#contenido">Ir al contenido</a>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">IFTS N.º 24 · DGETyFP · CABA · Borrador de uso interno</p>
+  <h1>Rúbrica de defensa</h1>
+  <p class="lead">No mide la complejidad técnica de la aplicación. Mide si detrás de cada línea de código hay una <strong>decisión pensada</strong> — y si la comisión puede sostenerla en voz alta.</p>
+  <p class="meta">
+    <b>Corresponde a Canvas Analítica · TPI 1</b><br>
+    Laboratorio de Tecnologías de la Imagen Digital — Prof. Matías Barreto<br>
+    Corpus: 20 × 9 = 180 imágenes — defensa presencial y grupal
+  </p>
+</header>
+
+<nav aria-labelledby="rot-indice">
+  <p class="rotulo" id="rot-indice">Contenido</p>
+  <ul>
+    <li><span class="m">&middot;</span><a href="#como-leer">Cómo leer esta rúbrica</a></li>
+    <li><span class="m">&middot;</span><a href="#criterios">Criterios</a></li>
+    <li><span class="m">&middot;</span><a href="#nota-defensa">Nota para la defensa</a></li>
+  </ul>
+</nav>
+
+<main id="contenido">
+
+<h2 id="como-leer">Cómo leer esta rúbrica</h2>
+<p>Cada criterio tiene dos columnas: <strong>qué buscamos</strong> cuando el criterio está logrado, y una <strong>señal de alerta</strong> — un indicio concreto de que hubo delegación ciega al agente en vez de supervisión crítica. La rúbrica no se completa en silencio: cada fila es, en la defensa, una pregunta que se hace en voz alta a la comisión.</p>
+
+<h2 id="criterios">Criterios</h2>
+
+<div class="criterio">
+<h3><span class="n">1</span>Normalización del corpus</h3>
+<div class="callout buscamos"><span class="rotulo-inline">Qué buscamos</span>El protocolo distingue normalización técnica de normalización tonal, está documentado y se aplicó por igual a las 180 imágenes. La comisión puede explicar qué perdería si ecualizara el contraste antes de medir el histograma.</div>
+<div class="callout alerta"><span class="rotulo-inline">Señal de alerta</span>El protocolo mezcla ambos tipos de normalización sin distinguirlos, o nadie puede explicar por qué eso sería un problema.</div>
+</div>
+
+<div class="criterio">
+<h3><span class="n">2</span>Dataset y metadata</h3>
+<div class="callout buscamos"><span class="rotulo-inline">Qué buscamos</span>Cada variable —luminancia, saturación, métricas de histograma— tiene una justificación escrita: qué mide, por qué esa y no otra, qué matiz de la foto pierde al reducirla a un número. El tipo asignado (<code>tipo_manovich</code>) viene acompañado de <code>confianza_etiqueta</code>, <code>caso_limite</code> y una <code>justificacion_etiqueta</code> breve — no es una etiqueta muda. La tabla está pensada para recibir columnas futuras sin rediseñarse.</div>
+<div class="callout alerta"><span class="rotulo-inline">Señal de alerta</span>Las variables quedaron tal como las propuso el agente por defecto, sin que se pueda nombrar una alternativa que se consideró y descartó. O el tipo asignado se trata como un dato objetivo, sin registrar casos límite ni ambigüedad.</div>
+</div>
+
+<div class="criterio">
+<h3><span class="n">3</span>La aplicación</h3>
+<div class="callout buscamos"><span class="rotulo-inline">Qué buscamos</span>Separación clara entre el pipeline de extracción y la interfaz. La interfaz —Streamlit o Gradio— lee la metadata disponible en vez de tener las variables escritas a mano. El reordenamiento —ranking en línea o plano X/Y— es coherente con los criterios definidos en el dataset.</div>
+<div class="callout alerta"><span class="rotulo-inline">Señal de alerta</span>El cálculo de variables y la interfaz están mezclados en el mismo lugar, o no se puede explicar cómo un criterio elegido se traduce en una posición sobre el canvas.</div>
+</div>
+
+<div class="criterio">
+<h3><span class="n">4</span>Repositorio en GitHub</h3>
+<div class="callout buscamos"><span class="rotulo-inline">Qué buscamos</span>Un README que le permite a alguien ajeno a la comisión correr el pipeline y la app. Estructura de carpetas clara, licencia, y un criterio de consentimiento explícito sobre las fotografías con personas identificables. Es la fuente pública y reproducible de la entrega — el corpus completo y los consentimientos, aparte, en el anexo restringido.</div>
+<div class="callout alerta"><span class="rotulo-inline">Señal de alerta</span>El proyecto solo corre en la computadora de quien lo armó, o no hay ningún tratamiento del consentimiento sobre las fotos casuales.</div>
+</div>
+
+<div class="criterio">
+<h3><span class="n">5</span>Paper</h3>
+<div class="callout buscamos"><span class="rotulo-inline">Qué buscamos</span>Presenta los cuatro productos analíticos —tabla descriptiva por tipo, gráfico de distribución con puntos individuales, canvas de dos variables, casos discordantes— con resultados concretos del propio corpus. Trata la ausencia de diferencia o el solapamiento amplio entre tipos como un resultado válido, no como un fracaso a esconder.</div>
+<div class="callout alerta"><span class="rotulo-inline">Señal de alerta</span>Describe la metodología pero nunca llega a mostrar cómo se distribuyen las variables entre tipos con datos reales del curso. O elige, después de probar varias, "la variable que mejor separa" los tipos y la presenta como si fuera el hallazgo central.</div>
+</div>
+
+<div class="criterio">
+<h3><span class="n">6</span>Escritura asistida con LLM</h3>
+<div class="callout buscamos"><span class="rotulo-inline">Qué buscamos</span>El paper se redactó a partir de una matriz de hallazgos con evidencia, alcance y límites ya definidos por la comisión antes de pedirle nada al modelo. La declaración de uso de IA existe y es específica: qué se le pidió, para qué, y qué se verificó.</div>
+<div class="callout alerta"><span class="rotulo-inline">Señal de alerta</span>El paper tiene cifras, citas o afirmaciones que nadie de la comisión puede rastrear hasta una tabla o un gráfico propio. O no hay declaración de uso de IA, aunque el texto lea como generado de punta a punta.</div>
+</div>
+
+<div class="criterio">
+<h3><span class="n">7</span>Bitácora Voy / Vengo</h3>
+<div class="callout buscamos"><span class="rotulo-inline">Qué buscamos</span>Al menos dos o tres ciclos completos en las decisiones clave —normalización, métrica de color, métrica de histograma, arquitectura de la app— con auditoría real: qué se mantuvo, corrigió, amplió o descartó, y qué aportó la comisión que el agente no podía resolver solo.</div>
+<div class="callout alerta"><span class="rotulo-inline">Señal de alerta</span>Los "vengo" son genéricos ("está bien", "funciona correcto"), sin evidencia de haber cuestionado un supuesto, un sesgo o una alternativa.</div>
+</div>
+
+<div class="criterio">
+<h3><span class="n">8</span>Defensa oral grupal</h3>
+<div class="callout buscamos"><span class="rotulo-inline">Qué buscamos</span>Cualquier integrante puede explicar cualquier decisión del proyecto, no solo la parte que programó, y puede justificar por qué se eligieron esas variables y no otras.</div>
+<div class="callout alerta"><span class="rotulo-inline">Señal de alerta</span>Solo una o dos personas de toda la comisión pueden responder preguntas fuera de "su" parte del código.</div>
+</div>
+
+<h2 id="nota-defensa">Nota para la defensa</h2>
+<blockquote>
+<p><strong>Cómo se usa en el momento</strong> — No se recorren los siete criterios en orden fijo. Se elige, imagen o dato en mano, uno de los "vengo" que la comisión documentó y se pide reconstruirlo en voz alta: qué se pidió, qué devolvió el agente, qué se encontró mal o sesgado, y qué se hizo con eso. Ahí aparece, más que en ningún gráfico, si hubo supervisión real.</p>
+</blockquote>
+
+</main>
+
+<footer>
+  Documento de trabajo — borrador para revisar con la profesora ayudante antes de compartir con el curso.<br>
+  Laboratorio de Tecnologías de la Imagen Digital — IFTS N.º 24 — v2 · 07/09/2026
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# ─────────────────────────────────────────────────────────────
+# Normalización de finales de línea y definición de binarios
+# ─────────────────────────────────────────────────────────────
+* text=auto eol=lf
+
+# Scripts de Windows
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+
+# Archivos binarios de imagen y multimedia
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.webp binary
+*.tiff binary
+*.mp4 binary
+*.avi binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+
+# Diagramas
+*.excalidraw text eol=lf

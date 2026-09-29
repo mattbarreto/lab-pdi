@@ -1,0 +1,18 @@
+# OpenCV avanzado
+# Laboratorio de Tecnologías de la Imagen Digital — IFTS24
+#
+# Python 3.12. Instalar con:
+#   uv pip install -r requirements.txt
+
+# Cálculo y visualización
+numpy>=2.0
+matplotlib>=3.8
+
+# Visión por computadora
+# Decisión pendiente: este nivel reemplaza las cascadas de Haar por detectores DNN
+# (cv2.FaceDetectorYN). Hasta verificar la migración, se mantiene el mismo rango que
+# en los niveles anteriores. OpenCV 5.0 quitó cv2.CascadeClassifier de Python.
+opencv-python>=4.10,<5
+
+# Entorno de cuadernos
+ipykernel>=6.29

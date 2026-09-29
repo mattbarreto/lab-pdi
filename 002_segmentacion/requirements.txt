@@ -1,0 +1,6 @@
+numpy>=1.26.0
+opencv-python>=4.10.0,<5
+scikit-image>=0.22.0
+matplotlib>=3.8.0
+pillow>=10.0.0
+ipykernel>=6.29.0
